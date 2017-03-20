@@ -6,23 +6,39 @@
 #include <instruction/Parser.h>
 #include <instruction/Printer.h>
 
-int main() {
-    Machine machine(16);
-    defineArithmetic(machine);
-    defineJump(machine);
-    defineMemory(machine);
+class MachineEx : public Machine {
+public:
+    MachineEx(const MachinePrototype& prototype)
+            : Machine(prototype) {
+    }
 
-    machine.defineN("hello_world", []() -> jumpdiff {
-            std::cout << "Hello, World!" << std::endl;
-            return 0;
-        });
-    machine.defineR("print_reg", [](Reg reg) -> jumpdiff {
+    void run(const Program& program) override {
+        size_t min = 0, max = program.instructions.size() - 1;
+        size_t pointer = 0;
+        while (pointer <= max) {
+            jumpdiff i = Machine::run(program.instructions[pointer]);
+            pointer += i + 1;
+            if (pointer < min) pointer = min;
+        }
+    }
+};
+
+int main() {
+    MachinePrototype prototype(16, 16);
+    defineArithmetic(prototype);
+    defineJump(prototype);
+    defineMemory(prototype);
+
+    prototype.defineN("hello_world", []() -> jumpdiff {
+        std::cout << "Hello, World!" << std::endl;
+        return 0;
+    });
+    prototype.defineR("print_reg", [](Reg reg) -> jumpdiff {
         std::cout << reg.i << std::endl;
         return 0;
     });
 
-
-    Parser parser(machine);
+    Parser parser(prototype);
     Program program = parser.parseProgram(
             ""
                     "hello_world;"
@@ -33,12 +49,12 @@ int main() {
                     "jl r0, 10, -4;"
     );
 
-    Printer printer(machine);
+    Printer printer(prototype);
     std::string stringOutput = printer.print(program);
     std::cout << stringOutput << std::endl;
 
+    MachineEx machine(prototype);
     machine.run(program);
-    machine.printReg();
 
     return 0;
 }
