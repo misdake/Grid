@@ -2,11 +2,13 @@
 
 #include <ctime>
 
-std::uniform_int_distribution<> oprand_full_dist(-7, 7);
-std::uniform_int_distribution<> oprand_reg_dist(0, 15);
-std::uniform_int_distribution<> oprand_negative_dist(-7, -1);
-std::uniform_int_distribution<> oprand_positive_dist(1, 7);
-std::binomial_distribution<> oprand_binomial_dist(14, 0.5);
+std::uniform_int_distribution<> oprand_full_dist(-3, 3);
+std::uniform_int_distribution<> oprand_reg_dist(0, 7);
+std::uniform_int_distribution<> oprand_negative_dist(-3, -1);
+std::uniform_int_distribution<> oprand_positive_dist(1, 3);
+std::binomial_distribution<> oprand_binomial_dist(6, 0.5);
+
+std::poisson_distribution<> program_length_binomial_dist(10);
 
 uint8_t Generator::opIndex() {
     std::discrete_distribution<> opcode_dist(weights.begin(), weights.end());
@@ -30,7 +32,7 @@ int8_t Generator::oprand_negative() {
     return static_cast<int8_t>(r);
 }
 int8_t Generator::oprand_binomial() {
-    int r = oprand_binomial_dist(rng) - 7;
+    int r = oprand_binomial_dist(rng) - 3;
     return static_cast<int8_t>(r);
 }
 
@@ -67,4 +69,15 @@ int8_t Generator::oprand(OprandRnd rnd) {
         case OprandRnd::NEGATIVE: return oprand_negative();
         case OprandRnd::BINOMIAL: return oprand_binomial();
     }
+}
+
+ProgramEx Generator::generateProgram() {
+    int length = program_length_binomial_dist(rng);
+    ProgramEx program{};
+    for (int i = 0; i < length; i++) {
+        InstructionEx instEx = generateInstruction();
+        program.instructionExList.push_back(instEx);
+        program.instructions.push_back(instEx.toInstruction());
+    }
+    return program;
 }

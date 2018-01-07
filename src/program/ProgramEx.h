@@ -1,9 +1,8 @@
 #pragma once
 
 #include <program/Program.h>
+#include "InstructionEx.h"
 
 struct ProgramEx : public Program {
-    uint64_t id;
-    int16_t x, y;
-    
+    std::vector<InstructionEx> instructionExList;
 };

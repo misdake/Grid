@@ -11,7 +11,7 @@ struct InstructionEx {
     int8_t cost;
 
     Instruction toInstruction() {
-        int16_t code = (int16_t)opcode;
+        auto code = static_cast<int16_t>(opcode);
         return {code, oprand0, oprand1, oprand2};
     }
 };

@@ -15,12 +15,8 @@ int main() {
 
     Printer printer(prototype);
 
-    for (int i = 0; i != 5; i++) {
-        InstructionEx c = generator.generateInstruction();
-        Instruction instruction = c.toInstruction();
-        printf("(%d) %s\n", c.cost, printer.print(instruction).c_str());
-    }
-
+    ProgramEx program = generator.generateProgram();
+    printf("%s\n", printer.print(program).c_str());
 
     return 0;
 }
