@@ -4,7 +4,7 @@
 #include "ProgramEx.h"
 #include "../isa/isa.h"
 
-#include <random>
+//#include <random>
 #include <vector>
 #include <memory>
 
@@ -23,24 +23,24 @@ struct InstGenEntry {
 
 class Generator {
 private:
-    std::mt19937 rng;
+//    std::mt19937 rng;
 
     std::vector<int> weights;
     std::vector<InstGenEntry> entries;
 
-    uint8_t opIndex();
-    int8_t oprand(OprandRnd rnd);
-    int8_t oprand_full();
-    int8_t oprand_reg();
-    int8_t oprand_positive();
-    int8_t oprand_negative();
-    int8_t oprand_binomial();
-
 public:
     Generator();
-    explicit Generator(uint32_t seed);
+//    explicit Generator(uint32_t seed);
+
+    uint8_t opIndex() const;
+    int8_t oprand(OprandRnd rnd) const;
+    int8_t oprand_full() const;
+    int8_t oprand_reg() const;
+    int8_t oprand_positive() const;
+    int8_t oprand_negative() const;
+    int8_t oprand_binomial() const;
 
     void registerInstruction(const InstGenEntry& entry);
-    InstructionEx generateInstruction();
-    ProgramEx generateProgram();
+    InstructionEx generateInstruction() const;
+    ProgramEx generateProgram() const;
 };

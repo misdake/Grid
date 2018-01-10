@@ -16,17 +16,17 @@ struct InstRegEntry {
 
 const InstRegEntry isa[] = {
         //arithmetic
-        {"abs_r", 1, OprandRnd::REG, OprandRnd::NONE, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"set_ri", 1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"set_rr", 1, OprandRnd::REG, OprandRnd::REG, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"add_ri", 1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"add_rr", 1, OprandRnd::REG, OprandRnd::REG, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"mul_ri", 1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 2; }},
-        {"mul_rr", 1, OprandRnd::REG, OprandRnd::REG, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 2; }},
+        {"abs_r",   1, OprandRnd::REG, OprandRnd::NONE,     OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"set_ri",  1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"set_rr",  1, OprandRnd::REG, OprandRnd::REG,      OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"add_ri",  1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"add_rr",  1, OprandRnd::REG, OprandRnd::REG,      OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"mul_ri",  1, OprandRnd::REG, OprandRnd::BINOMIAL, OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 2; }},
+        {"mul_rr",  1, OprandRnd::REG, OprandRnd::REG,      OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 2; }},
         //logic
-        {"notl_r", 1, OprandRnd::REG, OprandRnd::NONE, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"andl_rr", 1, OprandRnd::REG, OprandRnd::REG, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
-        {"orl_rr", 1, OprandRnd::REG, OprandRnd::REG, OprandRnd::NONE, [](int8_t op1, int8_t op2, int8_t op3) -> int8_t { return 1; }},
+        {"notl_r",  1, OprandRnd::REG, OprandRnd::NONE,     OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"andl_rr", 1, OprandRnd::REG, OprandRnd::REG,      OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
+        {"orl_rr",  1, OprandRnd::REG, OprandRnd::REG,      OprandRnd::NONE, [](const RunEnv& param) -> int8_t { return 1; }},
 };
 
 void defineISA(MachinePrototype& machine, Generator& generator) {
@@ -34,6 +34,11 @@ void defineISA(MachinePrototype& machine, Generator& generator) {
     defineJump(machine);
     defineLogic(machine);
     defineMemory(machine);
+
+//    machine.define("getX_r", "%s", OpType::R, [=](Machine& machine, const Instruction& instruction) -> jumpdiff {
+//        machine.reg(instruction.oprand0.i) = machine.param(0);
+//        return 0;
+//    });
 
     for (const InstRegEntry& e : isa) {
         InstGenEntry entry{

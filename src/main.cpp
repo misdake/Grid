@@ -7,16 +7,27 @@
 #include <instruction/Printer.h>
 
 #include "program/Generator.h"
+#include "model/Grid.h"
 
 int main() {
-    MachinePrototype prototype(16, 16);
+    MachinePrototype prototype(8, 16);
     Generator generator;
     defineISA(prototype, generator);
 
     Printer printer(prototype);
 
-    ProgramEx program = generator.generateProgram();
-    printf("%s\n", printer.print(program).c_str());
+    Grid grid(1, 1, prototype, printer, generator);
+    grid.initialize();
+
+    Block& block = grid.getBlock(0, 0);
+    printer.print(*block.getProgram());
+
+    for(int i = 0; i < 5; i++) {
+        grid.envRun();
+        grid.blockRun();
+        block.getMachine()->printReg();
+        printf("--------------\n");
+    }
 
     return 0;
 }

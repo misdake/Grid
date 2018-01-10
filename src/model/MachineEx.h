@@ -2,9 +2,13 @@
 
 #include <machine/Machine.h>
 
+class Grid;
+class Block;
+class ProgramEx;
+
 class MachineEx : public Machine {
 public:
-    MachineEx(const MachinePrototype& prototype);
+    explicit MachineEx(const MachinePrototype& prototype);
 
-    void run(const Program& program) override;
+    void runEx(Grid& grid, Block& block, ProgramEx& program);
 };
